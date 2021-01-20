@@ -31,7 +31,6 @@ public class playerMovement : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-
     isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
     Debug.Log(isGrounded);
     Debug.Log(velocity.y);
@@ -56,46 +55,7 @@ public class playerMovement : MonoBehaviour
     velocity.y += gravity * Time.deltaTime;
 
     controller.Move(velocity * Time.deltaTime);
-    // if (Input.GetKey(KeyCode.A)){
-    //   transform.Rotate(-Vector3.up * speed * 17 * Time.deltaTime);
-    // }
-    //
-    // if (Input.GetKey(KeyCode.D)){
-    //   transform.Rotate(Vector3.up * speed * 17 * Time.deltaTime);
-    // }
-    //
-    // Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-    // input = Vector2.ClampMagnitude(input, 1);
-    //
-    // var camTransform = c1.GetComponent<Transform>();
-    // Vector3 camF = camTransform.forward;
-    // Vector3 camR = camTransform.right;
-    //
-    // camF.y = 0;
-    // camR.y = 0;
-    //
-    // camF = camF.normalized;
-    // camR = camR.normalized;
-    //
-    // var newPos = (camF*input.y + camR*input.x)*speed;
-    //
-    // var characterController = this.GetComponent<CharacterController>();
-    // characterController.SimpleMove(newPos);
-    //
-    // groundedPlayer = characterController.isGrounded;
-    // if (groundedPlayer && playerVelocity.y < 0)
-    // {
-    //     playerVelocity.y = 0f;
-    // }
-    //
-    // if (Input.GetButtonDown("Jump") && groundedPlayer)
-    // {
-    //     playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-    // }
-    //
-    // playerVelocity.y += gravityValue * Time.deltaTime;
-    // characterController.Move(playerVelocity * Time.deltaTime);
-    //
+
     var newPoss = transformHold.localPosition;
     var delta = (newPoss - oldPos).magnitude;
     var animation = this.GetComponent<Transform>().GetComponentsInChildren<Animator>()[0];
