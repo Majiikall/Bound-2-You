@@ -21,6 +21,8 @@ public class populateMe : MonoBehaviour
 
     private List<GameObject> objectsInScene = new List<GameObject>();
 
+    public GameObject player;
+
     // Start is called before the first frame update
     public void populateLevel(int gridSectionsPerRow, float relativeLevelPos)
     {
@@ -87,8 +89,38 @@ public class populateMe : MonoBehaviour
         objectsInScene.Add(Instantiate(instantObj, new Vector3(positionsNew.x, 0, positionsNew.y), Quaternion.identity, gameObject.GetComponent<Transform>()));
       }
 
-      //Add in the pathfinding
-      // verifyPath();
+      searchAlgorithm search = new searchAlgorithm();
+
+      // Remove the enemies in the scene
+      for(int x = 0; x < objectsInScene.Count; ++x)
+      {
+         GameObject tempObj = objectsInScene[x];
+         if(tempObj.name == "Sphere (1)(Clone)")
+         {
+           objectsInScene.Remove(tempObj);
+         }
+      }
+      int currentLocation = findGridSpot(player);
+
+      search.checkPathComplete(objectsInScene, gridSectionsPerRow, floorSize, grid, currentLocation);
+    }
+
+    private int findGridSpot(GameObject player)
+    {
+      Transform play = player.GetComponent<Transform>();
+      // if(player.GetComponent<Transform>().positon.x == 0)
+      // {
+      //   return 0;
+      // }
+      // else if(player.GetComponent<Transform>().positon.x > 1)
+      // {
+      //   return 1;
+      // }
+      // else
+      // {
+      //   return -1;
+      // }
+      return 0;
     }
 
     private Vector2 convertToCoord(int toConv, int gridSectionsPerRow)

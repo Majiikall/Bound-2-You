@@ -15,4 +15,14 @@ public class mainMenu : MonoBehaviour
     Debug.Log("QUIT functioning");
     Application.Quit();
   }
+
+  public void TestGame()
+  {
+    SceneManager.LoadScene("idealScene");
+  }
+
+  void OnDisable()
+  {
+    PlayerPrefs.SetInt("score", 1);
+  }
 }

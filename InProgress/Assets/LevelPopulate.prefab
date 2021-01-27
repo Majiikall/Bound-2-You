@@ -329,6 +329,7 @@ MonoBehaviour:
   obstacle: {fileID: 8594662393962773592, guid: 4cd79270fe20147489759bcc31403540,
     type: 3}
   enemy: {fileID: 8553947742581856778, guid: ea1f5a6cea133463b990598d352f088c, type: 3}
+  player: {fileID: 9204712221089840875, guid: fa48578c334224e05a240f9a4c20b8c3, type: 3}
 --- !u!1 &4271373523021499589
 GameObject:
   m_ObjectHideFlags: 0
