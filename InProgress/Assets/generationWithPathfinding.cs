@@ -31,6 +31,10 @@ public class generationWithPathfinding : MonoBehaviour
     //Store previous position to avoid stacking objects
     private List<Vector2> prevPos = new List<Vector2>();
 
+    private int offset = 95;
+
+    private int heightOffset = 0;
+
     //Populate the level and check to verify it is "complete"
     public void populateLevelAndCheck()
     {
@@ -72,6 +76,8 @@ public class generationWithPathfinding : MonoBehaviour
       {
         tempScore = 25;
       }
+
+      Debug.Log(tempScore);
 
       //Set previous tree location
       prevPos.Add(startingLocation);
@@ -124,6 +130,8 @@ public class generationWithPathfinding : MonoBehaviour
           nextTree = 4;
         }
 
+        List<Vector2> validCoords = new List<Vector2>();
+
         //The fun begins.
         //Calculate the current tree picked and then based off of previous trees
         //find new valid coordinates, pick one at random that doesn't overlap with previous.
@@ -131,54 +139,168 @@ public class generationWithPathfinding : MonoBehaviour
         switch(nextTree)
         {
           case 1:
-            Debug.Log("BasicTree");
-            List<Vector2> validCoords = new List<Vector2>();
+            //Debug.Log("basicTree");
+            //If the lastplaced is a moveBranch make sure to account for extra distance we can travel.
             if(lastPlaced == moveBranchTree)
             {
-              Debug.Log("Here with move");
               validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true);
-
-              Debug.Log(validCoords.Count);
-              foreach(Vector2 x in validCoords)
-              {
-                Instantiate(basicTree, new Vector3((x.x * 10) -95, currentHeight, (x.y * 10) -95), Quaternion.identity, gameObject.GetComponent<Transform>());
-              }
             }
             else
             {
-              Debug.Log("Here");
               validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, false);
-
-              foreach(Vector2 x in validCoords)
-              {
-                Instantiate(basicTree, new Vector3((x.x * 10) -95, currentHeight, (x.y * 10) -95), Quaternion.identity, gameObject.GetComponent<Transform>());
-              }
             }
 
+            int pickAPlace = validCoords.Count;
+
+            pickAPlace = Random.Range(0, pickAPlace);
+
+            Vector2 itemLocation = validCoords[pickAPlace];
+
+            GameObject newObj = Instantiate(basicTree, new Vector3((itemLocation.x * 10) - offset, currentHeight, (itemLocation.y * 10) - offset), Quaternion.identity, gameObject.GetComponent<Transform>());
+            objectsInScene.Add(newObj);
+
+            if(heightOffset >= 1)
+            {
+              Transform newObjTransform = newObj.GetComponent<Transform>();
+
+              var tempScale = newObjTransform.localScale;
+
+              tempScale.y = tempScale.y + (heightOffset * 5);
+
+              var tempPosition = newObjTransform.position;
+
+              tempPosition.y = tempPosition.y + (heightOffset * 5);
+
+              newObjTransform.localScale = tempScale;
+              newObjTransform.position = tempPosition;
+            }
+
+            prevPos.Add(itemLocation);
             lastLastPlaced = lastPlaced;
             lastPlaced = basicTree;
-            tempScore = 1;
+            currentLocation = itemLocation;
             break;
+
           case 2:
             //Debug.Log("moveBranchTree");
+            //If a move branch is being placed then we only need to check the farthest distance
+            validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true);
 
+            int pickAPlace2 = validCoords.Count;
 
+            pickAPlace2 = Random.Range(0, pickAPlace2);
+
+            Vector2 itemLocation2 = validCoords[pickAPlace2];
+
+            GameObject newObj2 = Instantiate(moveBranchTree, new Vector3((itemLocation2.x * 10) - offset, currentHeight, (itemLocation2.y * 10) - offset), Quaternion.identity, gameObject.GetComponent<Transform>());
+            objectsInScene.Add(newObj2);
+
+            if(heightOffset >= 1)
+            {
+              Transform newObjTransform2 = newObj2.GetComponent<Transform>();
+
+              var tempScale2 = newObjTransform2.localScale;
+
+              tempScale2.y = tempScale2.y + (heightOffset * 5);
+
+              var tempPosition2 = newObjTransform2.position;
+
+              tempPosition2.y = tempPosition2.y + (heightOffset * 5);
+
+              newObjTransform2.localScale = tempScale2;
+              newObjTransform2.position = tempPosition2;
+            }
+
+            prevPos.Add(itemLocation2);
             lastLastPlaced = lastPlaced;
             lastPlaced = moveBranchTree;
+            currentLocation = itemLocation2;
             break;
+
           case 3:
             //Debug.Log("climbTree");
+            if(lastPlaced == moveBranchTree)
+            {
+              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true);
+            }
+            else
+            {
+              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, false);
+            }
 
+            int pickAPlace3 = validCoords.Count;
 
+            pickAPlace3 = Random.Range(0, pickAPlace3);
+
+            Vector2 itemLocation3 = validCoords[pickAPlace3];
+
+            GameObject newObj3 = Instantiate(climbTree, new Vector3((itemLocation3.x * 10) - offset, currentHeight, (itemLocation3.y * 10) - offset), Quaternion.identity, gameObject.GetComponent<Transform>());
+            objectsInScene.Add(newObj3);
+
+            if(heightOffset >= 1)
+            {
+              Transform newObjTransform3 = newObj3.GetComponent<Transform>();
+
+              var tempScale3 = newObjTransform3.localScale;
+
+              tempScale3.y = tempScale3.y + (heightOffset * 5);
+
+              var tempPosition3 = newObjTransform3.position;
+
+              tempPosition3.y = tempPosition3.y + (heightOffset * 5);
+
+              newObjTransform3.localScale = tempScale3;
+              newObjTransform3.position = tempPosition3;
+            }
+
+            heightOffset++;
+
+            prevPos.Add(itemLocation3);
             lastLastPlaced = lastPlaced;
             lastPlaced = climbTree;
+            currentLocation = itemLocation3;
             break;
+
           case 4:
             //Debug.Log("End Tree");
+            if(lastPlaced == moveBranchTree)
+            {
+              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true);
+            }
+            else
+            {
+              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, false);
+            }
 
+            int pickAPlace4 = validCoords.Count;
 
+            pickAPlace4 = Random.Range(0, pickAPlace4);
+
+            Vector2 itemLocation4 = validCoords[pickAPlace4];
+
+            GameObject newObj4 = Instantiate(endTree, new Vector3((itemLocation4.x * 10) - offset, currentHeight, (itemLocation4.y * 10) - offset), Quaternion.identity, gameObject.GetComponent<Transform>());
+            objectsInScene.Add(newObj4);
+
+            if(heightOffset >= 1)
+            {
+              Transform newObjTransform4 = newObj4.GetComponent<Transform>();
+
+              var tempScale4 = newObjTransform4.localScale;
+
+              tempScale4.y = tempScale4.y + (heightOffset * 5);
+
+              var tempPosition4 = newObjTransform4.position;
+
+              tempPosition4.y = tempPosition4.y + (heightOffset * 5);
+
+              newObjTransform4.localScale = tempScale4;
+              newObjTransform4.position = tempPosition4;
+            }
+
+            prevPos.Add(itemLocation4);
             lastLastPlaced = lastPlaced;
             lastPlaced = endTree;
+            currentLocation = itemLocation4;
             break;
         }
 
@@ -193,6 +315,7 @@ public class generationWithPathfinding : MonoBehaviour
     {
       List<Vector2> temp = new List<Vector2>();
 
+      //Set variables based on the next item being placed. Need to account for proper space to jump.
       int count, change, step, total;
       if(isMove == true)
       {
@@ -213,10 +336,12 @@ public class generationWithPathfinding : MonoBehaviour
       //It's only bad practice if it doesn't work haha ha ha :{
       while(true)
       {
+        //Exit if we reach all spots checked
         if(overAll == total)
         {
           break;
         }
+        //At halfway switch variables to reduce code
         if(overAll % (total / 2) == 0 && count > 0)
         {
           change--;
@@ -227,6 +352,7 @@ public class generationWithPathfinding : MonoBehaviour
           flip = !flip;
           count = 0;
         }
+        //Switch x and z searching
         if(count % (total / 4) == 0 && overAll != (total / 2) && count > 0)
         {
           step--;
@@ -236,15 +362,20 @@ public class generationWithPathfinding : MonoBehaviour
           flip = !flip;
           count = 0;
         }
+        //Get the new locations based off the current location
         float tempX = currPoss.x + change;
         float tempZ = currPoss.y + step;
 
-        if(tempX >= xLow && tempX <= xHigh)
+        //Check if valid X
+        if(tempX > xLow && tempX < xHigh)
         {
-          if(tempZ >= zLow && tempZ <= zHigh)
+          //Check if valid Y
+          if(tempZ > zLow && tempZ < zHigh)
           {
+            //Create coord if this far
             Vector2 tempCoordNew = new Vector2(tempX, tempZ);
 
+            //Compare coord to make sure nothing placed here yet then add to possible locations of new piece
             if(!prevPos.Contains(tempCoordNew))
             {
               temp.Add(tempCoordNew);
@@ -252,6 +383,8 @@ public class generationWithPathfinding : MonoBehaviour
           }
         }
 
+        //For keeping single statements in lines above we use a flip to increment variables depending on how
+        //far we are in the search for valid locations
         if(flip)
         {
           change++;
@@ -265,6 +398,7 @@ public class generationWithPathfinding : MonoBehaviour
         overAll++;
       }
 
+      //Return all places we can go.
       return temp;
     }
 
