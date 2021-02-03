@@ -39,10 +39,11 @@ public class generationWithPathfinding : MonoBehaviour
 
     public GameObject levelCompleteUI;
 
+    public Component[] findPlayer;
+
     //Populate the level and check to verify it is "complete"
     public void populateLevelAndCheck()
     {
-      Debug.Log(currentScore);
       // Debug.Log(player.GetComponent<Transform>().position);
       // Start by spawning in the grid for the current level
       Transform floorTransform = floor.GetComponent<Transform>();
@@ -74,8 +75,12 @@ public class generationWithPathfinding : MonoBehaviour
       posPlayer.y = 30f;
       playerTransform.position = posPlayer;
 
-      // Debug.Log(player.GetComponent<Transform>().position);
+      var newPlayer = Instantiate(player, new Vector3(playerTransform.position.x, playerTransform.position.y, playerTransform.position.z), Quaternion.identity, gameObject.GetComponent<Transform>());
 
+      Destroy(player);
+
+      player = newPlayer;
+      
       //Center the floor under the player
       Transform floor2Transform = floorTemp.GetComponent<Transform>();
       posPlayer.y = 0f;
