@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class playerMovement : MonoBehaviour
@@ -21,6 +22,8 @@ public class playerMovement : MonoBehaviour
   public float jumpHeight = 3.0f;
 
   bool isGrounded;
+
+  public GameObject levelCompleteUI;
 
   // Start is called before the first frame update
   void Start()
@@ -66,5 +69,12 @@ public class playerMovement : MonoBehaviour
     {
       animation.Play("Idle State");
     }
+  }
+
+  private void OnTriggerEnter(Collider other)
+  {
+    levelCompleteUI.SetActive(true);
+    Time.timeScale = 0.0f;
+    Cursor.lockState = CursorLockMode.Confined;
   }
 }

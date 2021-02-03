@@ -24,9 +24,8 @@ public class generationWithPathfinding : MonoBehaviour
     private List<GameObject> objectsInScene = new List<GameObject>();
 
     //Score, height and temp for proper placement
-    private int currentScore = 1;
+    private int currentScore = 0;
     private int currentHeight = 15;
-    private int scoreForTesting = 1;
 
     //Store previous position to avoid stacking objects
     private List<Vector2> prevPos = new List<Vector2>();
@@ -35,22 +34,31 @@ public class generationWithPathfinding : MonoBehaviour
 
     private int heightOffset = 0;
 
+    private static bool GameIsPaused = false;
+    public GameObject pauseMenuUI;
+
+    public GameObject levelCompleteUI;
+
     //Populate the level and check to verify it is "complete"
     public void populateLevelAndCheck()
     {
+      Debug.Log(currentScore);
+      // Debug.Log(player.GetComponent<Transform>().position);
       // Start by spawning in the grid for the current level
       Transform floorTransform = floor.GetComponent<Transform>();
 
       // Set the scale to 20 x 20 using step 1.
       var floorScale = floorTransform.localScale;
 
-      floorScale.x = gridSize;
-      floorScale.z = gridSize;
+      floorScale.x = gridSize * 2;
+      floorScale.z = gridSize * 2;
 
       floorTransform.localScale = floorScale;
 
       // Make floor spawn and add it to list in case we need it later.
-      objectsInScene.Add(Instantiate(floor, new Vector3(0, 0, 0), Quaternion.identity, gameObject.GetComponent<Transform>()));
+      GameObject floorTemp = Instantiate(floor, new Vector3(0, 0, 0), Quaternion.identity, gameObject.GetComponent<Transform>());
+
+      objectsInScene.Add(floorTemp);
 
       // Pass in a random start location for the generation
       int convPassIn = Random.Range(0, gridSize * gridSize);
@@ -66,18 +74,23 @@ public class generationWithPathfinding : MonoBehaviour
       posPlayer.y = 30f;
       playerTransform.position = posPlayer;
 
+      // Debug.Log(player.GetComponent<Transform>().position);
+
+      //Center the floor under the player
+      Transform floor2Transform = floorTemp.GetComponent<Transform>();
+      posPlayer.y = 0f;
+      floor2Transform.position = posPlayer;
+
       // Add in the first object where the player is on top of it.
       objectsInScene.Add(Instantiate(basicTree, new Vector3(playerTransform.position.x, currentHeight, playerTransform.position.z), Quaternion.identity, gameObject.GetComponent<Transform>()));
 
       //Use current score to increase difficulty of the level and number of objects being placed.
-      int tempScore = scoreForTesting * 5;
+      int tempScore = currentScore + 5;
 
       if(tempScore > 25)
       {
         tempScore = 25;
       }
-
-      Debug.Log(tempScore);
 
       //Set previous tree location
       prevPos.Add(startingLocation);
@@ -95,7 +108,11 @@ public class generationWithPathfinding : MonoBehaviour
       int boundZLow = 0;
       int boundZHigh = 20;
 
+      //Used in loop to check valid spawn points
       Vector2 currentLocation = startingLocation;
+
+      //Stores next direction we can't go and avoids it.
+      int invalidLocation = 0;
 
       while(tempScore != 0)
       {
@@ -132,22 +149,26 @@ public class generationWithPathfinding : MonoBehaviour
 
         List<Vector2> validCoords = new List<Vector2>();
 
+
+        //Used to calculate the direction we moved and make sure we don't backtrack
+        Vector2 tempLocation = new Vector2(0, 0);
+
         //The fun begins.
         //Calculate the current tree picked and then based off of previous trees
         //find new valid coordinates, pick one at random that doesn't overlap with previous.
         //then continue on to the next item.
         switch(nextTree)
         {
+          //BASIC TREE
           case 1:
-            //Debug.Log("basicTree");
             //If the lastplaced is a moveBranch make sure to account for extra distance we can travel.
             if(lastPlaced == moveBranchTree)
             {
-              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true);
+              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true, invalidLocation);
             }
             else
             {
-              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, false);
+              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, false, invalidLocation);
             }
 
             int pickAPlace = validCoords.Count;
@@ -163,17 +184,19 @@ public class generationWithPathfinding : MonoBehaviour
             {
               Transform newObjTransform = newObj.GetComponent<Transform>();
 
-              var tempScale = newObjTransform.localScale;
-
-              tempScale.y = tempScale.y + (heightOffset * 5);
-
               var tempPosition = newObjTransform.position;
 
               tempPosition.y = tempPosition.y + (heightOffset * 5);
 
+              var tempScale = newObjTransform.localScale;
+
+              tempScale.y = tempPosition.y * 2;
+
               newObjTransform.localScale = tempScale;
               newObjTransform.position = tempPosition;
             }
+
+            tempLocation = currentLocation;
 
             prevPos.Add(itemLocation);
             lastLastPlaced = lastPlaced;
@@ -181,10 +204,10 @@ public class generationWithPathfinding : MonoBehaviour
             currentLocation = itemLocation;
             break;
 
+          //MOVEBRANCHTREE
           case 2:
-            //Debug.Log("moveBranchTree");
             //If a move branch is being placed then we only need to check the farthest distance
-            validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true);
+            validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true, invalidLocation);
 
             int pickAPlace2 = validCoords.Count;
 
@@ -199,17 +222,19 @@ public class generationWithPathfinding : MonoBehaviour
             {
               Transform newObjTransform2 = newObj2.GetComponent<Transform>();
 
-              var tempScale2 = newObjTransform2.localScale;
-
-              tempScale2.y = tempScale2.y + (heightOffset * 5);
-
               var tempPosition2 = newObjTransform2.position;
 
               tempPosition2.y = tempPosition2.y + (heightOffset * 5);
 
+              var tempScale2 = newObjTransform2.localScale;
+
+              tempScale2.y = tempPosition2.y * 2;
+
               newObjTransform2.localScale = tempScale2;
               newObjTransform2.position = tempPosition2;
             }
+
+            tempLocation = currentLocation;
 
             prevPos.Add(itemLocation2);
             lastLastPlaced = lastPlaced;
@@ -217,15 +242,15 @@ public class generationWithPathfinding : MonoBehaviour
             currentLocation = itemLocation2;
             break;
 
+          //CLIMBTREE
           case 3:
-            //Debug.Log("climbTree");
             if(lastPlaced == moveBranchTree)
             {
-              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true);
+              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true, invalidLocation);
             }
             else
             {
-              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, false);
+              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, false, invalidLocation);
             }
 
             int pickAPlace3 = validCoords.Count;
@@ -241,17 +266,19 @@ public class generationWithPathfinding : MonoBehaviour
             {
               Transform newObjTransform3 = newObj3.GetComponent<Transform>();
 
-              var tempScale3 = newObjTransform3.localScale;
-
-              tempScale3.y = tempScale3.y + (heightOffset * 5);
-
               var tempPosition3 = newObjTransform3.position;
 
               tempPosition3.y = tempPosition3.y + (heightOffset * 5);
 
+              var tempScale3 = newObjTransform3.localScale;
+
+              tempScale3.y = tempPosition3.y * 2;
+
               newObjTransform3.localScale = tempScale3;
               newObjTransform3.position = tempPosition3;
             }
+
+            tempLocation = currentLocation;
 
             heightOffset++;
 
@@ -261,15 +288,15 @@ public class generationWithPathfinding : MonoBehaviour
             currentLocation = itemLocation3;
             break;
 
+          //ENDTREE
           case 4:
-            //Debug.Log("End Tree");
             if(lastPlaced == moveBranchTree)
             {
-              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true);
+              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, true, invalidLocation);
             }
             else
             {
-              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, false);
+              validCoords = generatePossibleMove(currentLocation, boundXLow, boundXHigh, boundZLow, boundZHigh, false, invalidLocation);
             }
 
             int pickAPlace4 = validCoords.Count;
@@ -285,17 +312,19 @@ public class generationWithPathfinding : MonoBehaviour
             {
               Transform newObjTransform4 = newObj4.GetComponent<Transform>();
 
-              var tempScale4 = newObjTransform4.localScale;
-
-              tempScale4.y = tempScale4.y + (heightOffset * 5);
-
               var tempPosition4 = newObjTransform4.position;
 
               tempPosition4.y = tempPosition4.y + (heightOffset * 5);
 
+              var tempScale4 = newObjTransform4.localScale;
+
+              tempScale4.y = tempPosition4.y * 2;
+
               newObjTransform4.localScale = tempScale4;
               newObjTransform4.position = tempPosition4;
             }
+
+            tempLocation = currentLocation;
 
             prevPos.Add(itemLocation4);
             lastLastPlaced = lastPlaced;
@@ -304,14 +333,45 @@ public class generationWithPathfinding : MonoBehaviour
             break;
         }
 
+        //After the first tree is placed make sure to figure out the next blocked direction
+        tempLocation = currentLocation - tempLocation;
+        int direction;
+
+        //Based off of the largest value comparing the previous location and the new location
+        //we can determine which direction not to spawn next iteration.
+        if(Mathf.Abs(tempLocation.x) > Mathf.Abs(tempLocation.y))
+        {
+          direction = (int)tempLocation.x;
+
+          if(direction > 0)
+          {
+            invalidLocation = 3;
+          }
+          else
+          {
+            invalidLocation = 1;
+          }
+        }
+        else
+        {
+          direction = (int)tempLocation.y;
+          if(direction > 0)
+          {
+            invalidLocation = 4;
+          }
+          else
+          {
+            invalidLocation = 2;
+          }
+        }
+
         tempScore--;
-        continue;
       }
 
     }
 
     //Based on all possible moves generate the locations for a new item
-    public List<Vector2> generatePossibleMove(Vector2 currPoss, int xLow, int xHigh, int zLow, int zHigh, bool isMove)
+    public List<Vector2> generatePossibleMove(Vector2 currPoss, int xLow, int xHigh, int zLow, int zHigh, bool isMove, int invalidLocation)
     {
       List<Vector2> temp = new List<Vector2>();
 
@@ -333,9 +393,19 @@ public class generationWithPathfinding : MonoBehaviour
       count = 0;
       int overAll = 0;
       bool flip = false;
+      bool notBlocked = true;
+      int blockedCount = 1;
       //It's only bad practice if it doesn't work haha ha ha :{
       while(true)
       {
+        if(blockedCount == invalidLocation)
+        {
+          notBlocked = false;
+        }
+        else
+        {
+          notBlocked = true;
+        }
         //Exit if we reach all spots checked
         if(overAll == total)
         {
@@ -351,6 +421,7 @@ public class generationWithPathfinding : MonoBehaviour
           change *= -1;
           flip = !flip;
           count = 0;
+          blockedCount++;
         }
         //Switch x and z searching
         if(count % (total / 4) == 0 && overAll != (total / 2) && count > 0)
@@ -361,24 +432,28 @@ public class generationWithPathfinding : MonoBehaviour
           change = tempStep * -1;
           flip = !flip;
           count = 0;
+          blockedCount++;
         }
-        //Get the new locations based off the current location
-        float tempX = currPoss.x + change;
-        float tempZ = currPoss.y + step;
-
-        //Check if valid X
-        if(tempX > xLow && tempX < xHigh)
+        if(notBlocked)
         {
-          //Check if valid Y
-          if(tempZ > zLow && tempZ < zHigh)
-          {
-            //Create coord if this far
-            Vector2 tempCoordNew = new Vector2(tempX, tempZ);
+          //Get the new locations based off the current location
+          float tempX = currPoss.x + change;
+          float tempZ = currPoss.y + step;
 
-            //Compare coord to make sure nothing placed here yet then add to possible locations of new piece
-            if(!prevPos.Contains(tempCoordNew))
+          //Check if valid X
+          if(tempX > xLow && tempX < xHigh)
+          {
+            //Check if valid Y
+            if(tempZ > zLow && tempZ < zHigh)
             {
-              temp.Add(tempCoordNew);
+              //Create coord if this far
+              Vector2 tempCoordNew = new Vector2(tempX, tempZ);
+
+              //Compare coord to make sure nothing placed here yet then add to possible locations of new piece
+              if(!prevPos.Contains(tempCoordNew))
+              {
+                temp.Add(tempCoordNew);
+              }
             }
           }
         }
@@ -411,6 +486,7 @@ public class generationWithPathfinding : MonoBehaviour
       return new Vector2(x, y);
     }
 
+    //RUN THE ENTIRE LEVEL
     void Start()
     {
       //Verify path finding
@@ -420,28 +496,66 @@ public class generationWithPathfinding : MonoBehaviour
       currentScore += 1;
     }
 
-    //TESTING
+    //Constantly run to find the pause indicator if paused
     void Update()
     {
-      if(Input.GetKeyDown(KeyCode.T))
+      Transform currPlayerPlace = player.GetComponent<Transform>();
+
+      //Pause menu if needed
+      if(Input.GetKeyDown(KeyCode.P))
       {
-        Quit();
+        if(GameIsPaused)
+        {
+          Resume();
+        }
+        else
+        {
+          Pause();
+        }
       }
     }
 
-    // Exit scene for TESTING
+    //Restart the game after pause
+    public void Resume()
+    {
+      pauseMenuUI.SetActive(false);
+      Time.timeScale = 1.0f;
+      GameIsPaused = false;
+      Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    //Free cursor and stop time
+    void Pause()
+    {
+      pauseMenuUI.SetActive(true);
+      Time.timeScale = 0.0f;
+      GameIsPaused = true;
+      Cursor.lockState = CursorLockMode.Confined;
+    }
+
+    //Exit to main menu and return from action.
     public void Quit()
     {
-      Cursor.lockState = CursorLockMode.Confined;
+      pauseMenuUI.SetActive(false);
+      Time.timeScale = 1.0f;
+      GameIsPaused = false;
       SceneManager.LoadScene("menuScene");
     }
 
-    // Store score for multiple iterations of the game. Reset if return to menu
+    public void nextLevelComplete()
+    {
+      levelCompleteUI.SetActive(false);
+      Time.timeScale = 1.0f;
+      SceneManager.LoadScene("loadingScene");
+    }
+
+    // When leaving this scene store the current score for the level generation
     void OnDisable()
     {
       PlayerPrefs.SetInt("score", currentScore);
     }
 
+    //On start get the current score.
     void OnEnable()
     {
       currentScore  =  PlayerPrefs.GetInt("score");

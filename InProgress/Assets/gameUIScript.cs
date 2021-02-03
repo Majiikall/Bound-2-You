@@ -14,7 +14,7 @@ public class gameUIScript : MonoBehaviour
     private int curr = 0;
 
     public TextMeshProUGUI timeToNight;
-    private int step = 1;
+    // private int step = 1;
 
     void start()
     {
@@ -23,13 +23,13 @@ public class gameUIScript : MonoBehaviour
 
     void Update()
     {
-      if(Time.time / 5 > step)
-      {
-        Color32[] temp = timeToNight.textInfo.meshInfo[0].colors32;
-        temp[0] = new Color(1, 1, 1, 1);
-        timeToNight.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
-        step += 1;
-      }
+      // if(Time.time / 5 > step)
+      // {
+      //   Color32[] temp = timeToNight.textInfo.meshInfo[0].colors32;
+      //   temp[0] = new Color(1, 1, 1, 1);
+      //   timeToNight.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
+      //   step += 1;
+      // }
       if(Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
       {
         if(curr == 0)

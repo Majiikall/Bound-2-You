@@ -16,13 +16,8 @@ public class mainMenu : MonoBehaviour
     Application.Quit();
   }
 
-  public void TestGame()
-  {
-    SceneManager.LoadScene("idealScene");
-  }
-
   void OnDisable()
   {
-    PlayerPrefs.SetInt("score", 1);
+    PlayerPrefs.SetInt("score", 0);
   }
 }
