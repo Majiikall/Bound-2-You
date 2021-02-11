@@ -80,7 +80,7 @@ public class generationWithPathfinding : MonoBehaviour
       Destroy(player);
 
       player = newPlayer;
-      
+
       //Center the floor under the player
       Transform floor2Transform = floorTemp.GetComponent<Transform>();
       posPlayer.y = 0f;
@@ -161,7 +161,8 @@ public class generationWithPathfinding : MonoBehaviour
         //The fun begins.
         //Calculate the current tree picked and then based off of previous trees
         //find new valid coordinates, pick one at random that doesn't overlap with previous.
-        //then continue on to the next item.
+        //Add object to scene. If the height has scaled with a climb tree we need to increment our Y location and Scale.
+        //Update variables and location for next pass to avoid overlap and incomplete level creation.
         switch(nextTree)
         {
           //BASIC TREE

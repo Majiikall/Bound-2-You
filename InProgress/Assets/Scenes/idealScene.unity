@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -790,7 +790,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -905,8 +905,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 105
-  m_fontSizeBase: 105
+  m_fontSize: 95
+  m_fontSizeBase: 95
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1060,7 +1060,7 @@ GameObject:
   - component: {fileID: 1476061086}
   - component: {fileID: 1476061085}
   m_Layer: 5
-  m_Name: resumeButton (1)
+  m_Name: mainmenuButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1354,7 +1354,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -171}
+  m_AnchoredPosition: {x: 0, y: -131}
   m_SizeDelta: {x: 478.85678, y: 96.851166}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1747993712
@@ -1482,7 +1482,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 85}
+  m_AnchoredPosition: {x: 0, y: 72}
   m_SizeDelta: {x: 638.00415, y: 278.6173}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1784130052
@@ -1668,8 +1668,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 105
-  m_fontSizeBase: 105
+  m_fontSize: 95
+  m_fontSizeBase: 95
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1725,10 +1725,45 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1542063469}
     m_Modifications:
+    - target: {fileID: 3896630271079200508, guid: e997177a074634df897e00b2236667c4,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 800
+      objectReference: {fileID: 0}
+    - target: {fileID: 3896630271079200508, guid: e997177a074634df897e00b2236667c4,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 438.98633
+      objectReference: {fileID: 0}
+    - target: {fileID: 3896630271338590916, guid: e997177a074634df897e00b2236667c4,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -346
+      objectReference: {fileID: 0}
+    - target: {fileID: 3896630271338590916, guid: e997177a074634df897e00b2236667c4,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 163
+      objectReference: {fileID: 0}
+    - target: {fileID: 3896630271633499022, guid: e997177a074634df897e00b2236667c4,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -269.91
+      objectReference: {fileID: 0}
+    - target: {fileID: 3896630271633499022, guid: e997177a074634df897e00b2236667c4,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -173
+      objectReference: {fileID: 0}
     - target: {fileID: 3896630272669613328, guid: e997177a074634df897e00b2236667c4,
         type: 3}
       propertyPath: m_Name
       value: gameCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3896630272669613341, guid: e997177a074634df897e00b2236667c4,
+        type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3896630272669613343, guid: e997177a074634df897e00b2236667c4,
         type: 3}
