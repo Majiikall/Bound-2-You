@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 0021b5c7c22a743e4a20ff8d53bdcf71
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - floor: {fileID: 5277851191817645804, guid: 4e98d4001cfee478da1193ac06d143c0, type: 3}
+  - basicTree: {fileID: 600260425979944185, guid: 3d67a99418b60480ba982bb74836b5b7,
+      type: 3}
+  - endTree: {fileID: 1629661378439328062, guid: 12ca14d862bed43a38ed910722ecc970,
+      type: 3}
+  - moveBranchTree: {fileID: 8754929821184479188, guid: 1dec0e907688d4ee199eb6931ea1fe1d,
+      type: 3}
+  - climbTree: {fileID: 1559255058447071990, guid: 2d4cb1da6fcfa4eb18f80679879cba16,
+      type: 3}
+  - player: {fileID: 9204712221089840875, guid: fa48578c334224e05a240f9a4c20b8c3,
+      type: 3}
+  - pauseMenuUI: {instanceID: 0}
+  - levelCompleteUI: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
