@@ -23,7 +23,10 @@ public class playerMovement : MonoBehaviour
   public LayerMask groundMask;
   public float jumpHeight = 3.0f;
 
+  public LayerMask endMask;
+
   bool isGrounded;
+  bool isOver;
 
   public GameObject levelCompleteUI;
 
@@ -32,8 +35,6 @@ public class playerMovement : MonoBehaviour
   private float scalingFrames = 0;
   private float nextValueScale = 0.0f;
   private float nextValuePos = 0.0f;
-
-  private int curr = 0;
 
   private bool isActive = false;
   private bool branchActive = false;
@@ -60,9 +61,15 @@ public class playerMovement : MonoBehaviour
   void Update()
   {
     isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+    isOver = Physics.CheckSphere(groundCheck.position, groundDistance, endMask);
     if(isGrounded && velocity.y < 0)
     {
       velocity.y = -2.0f;
+    }
+    if(isOver)
+    {
+      Cursor.lockState = CursorLockMode.Confined;
+      SceneManager.LoadScene("menuScene");
     }
     var transformHold = this.GetComponent<Transform>();
     var oldPos = transformHold.localPosition;

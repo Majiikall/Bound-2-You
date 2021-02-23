@@ -474,6 +474,11 @@ PrefabInstance:
       propertyPath: playerLight
       value: 
       objectReference: {fileID: 1634788672}
+    - target: {fileID: 9204712221089840876, guid: fa48578c334224e05a240f9a4c20b8c3,
+        type: 3}
+      propertyPath: endMask.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
     - target: {fileID: 9204712221089840881, guid: fa48578c334224e05a240f9a4c20b8c3,
         type: 3}
       propertyPath: m_LocalPosition.x

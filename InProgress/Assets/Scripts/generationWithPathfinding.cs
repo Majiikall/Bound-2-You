@@ -46,6 +46,7 @@ public class generationWithPathfinding : MonoBehaviour
     //Populate the level and check to verify it is "complete"
     public void populateLevelAndCheck()
     {
+      Debug.Log(currentScore);
       // Debug.Log(player.GetComponent<Transform>().position);
       // Start by spawning in the grid for the current level
       Transform floorTransform = floor.GetComponent<Transform>();
